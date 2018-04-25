@@ -1,0 +1,32 @@
+import wikipedia
+import requests
+from bs4 import BeautifulSoup
+import time
+
+html = requests.get('https://en.wikipedia.org/wiki/Category:National_Football_League_teams')
+
+#make HTML into a BeautifulSoup text object
+b = BeautifulSoup(html.text, 'lxml')
+# create an empty list to store the links
+links = []
+
+for i in b.find_all(name = 'li'):
+    # pull the actual link for each one
+    for link in i.find_all('a', href=True):
+        links.append(link['href'])
+
+#only grab the links that are from the list of NFL teams
+links = links[36:68]
+# links will be returned as relative URLs in the format of 'wiki/nfl_team_name'
+# turn into absolute URLs
+team_links = ['https://en.wikipedia.org' + i for i in links]
+
+for team in team_links:
+    print(f'NFL Team Page {team}')
+    html = requests.get(team)
+    b = BeautifulSoup(html.text, 'lxml')
+
+    #pause between scrapes
+    time.sleep(1)
+    
+print(f'Number of NFL Teams Collected: {len(team_links)}')
