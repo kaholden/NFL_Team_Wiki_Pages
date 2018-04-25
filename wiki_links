@@ -28,5 +28,6 @@ for team in team_links:
 
     #pause between scrapes
     time.sleep(1)
-    
+
+#confirms all 32 teams returned
 print(f'Number of NFL Teams Collected: {len(team_links)}')
